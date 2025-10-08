@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetireWise Calculator v8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen p-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-900 to-blue-600 text-white rounded-lg p-8 mb-6">
+                <h1 class="text-4xl font-bold mb-2">🎯 RetireWise Calculator v8</h1>
+                <p class="text-xl opacity-90">Tax-Optimized Retirement Withdrawal Strategies • Privacy-First • No Data Storage</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <!-- Input Form -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-4">
+                        ✅ Step 1: Your Retirement Profile
+                    </h2>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+                        <p class="font-semibold text-sm">Demo Profile: Age 55, retiring at 65, $1M savings, 5% growth, 2.5% inflation, $2.5K/mo SS at 67</p>
+                    </div>
+
+                    <form id="retirement-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-medium text-blue-900 mb-1">Current Age</label>
+                                <input type="number" id="currentAge" value="55" min="50" max="70" 
+                                    class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block font-medium text-blue-900 mb-1">Retirement Age</label>
+                                <input type="number" id="retirementAge" value="65" min="55" max="75"
+                                    class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium text-blue-900 mb-1">State of Residence</label>
+                            <select id="state" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                                <option value="NC">North Carolina</option>
+                                <option value="FL">Florida (Tax-Free)</option>
+                                <option value="TX">Texas (Tax-Free)</option>
+                                <option value="CA">California</option>
+                                <option value="NY">New York</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium text-blue-900 mb-1">Annual Retirement Expenses ($)</label>
+                            <input type="number" id="annualExpenses" value="80000" step="1000"
+                                class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-medium text-blue-900 mb-1">Annual Growth (%)</label>
+                                <input type="number" id="annualGrowth" value="5" step="0.5"
+                                    class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block font-medium text-blue-900 mb-1">Inflation Rate (%)</label>
+                                <input type="number" id="inflationRate" value="2.5" step="0.5"
+                                    class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-blue-900 mt-6 mb-2">Social Security Benefits</h3>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-medium text-blue-900 mb-1">Monthly SS Benefit ($)</label>
+                                <input type="number" id="ssBenefit" value="2500" step="100"
+                                    class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block font-medium text-blue-900 mb-1">SS Start Age</label>
+                                <input type="number" id="ssStartAge" value="67" min="62" max="70"
+                                    class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-blue-900 mt-6 mb-2">Retirement Account Balances</h3>
+
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="block font-medium text-blue-900 mb-1">Traditional 401(k)/IRA ($)</label>
+                            <input type="number" id="traditional401k" value="450000" step="1000"
+                                class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                        </div>
+
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="block font-medium text-blue-900 mb-1">Roth IRA/401(k) ($)</label>
+                            <input type="number" id="rothIRA" value="200000" step="1000"
+                                class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                        </div>
+
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="block font-medium text-blue-900 mb-1">Taxable Brokerage ($)</label>
+                            <input type="number" id="taxableBrokerage" value="100000" step="1000"
+                                class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                        </div>
+
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="block font-medium text-blue-900 mb-1">Cash/Savings ($)</label>
+                            <input type="number" id="cashSavings" value="250000" step="1000"
+                                class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-yellow-400 focus:outline-none">
+                        </div>
+
+                        <button type="button" onclick="calculateStrategy()" id="calcButton"
+                            class="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg transition-all">
+                            Calculate My Strategy
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Alerts Panel -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-4">
+                        ⚠️ Tax & Penalty Alerts
+                    </h2>
+
+                    <div class="space-y-3">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4">
+                            <strong class="text-yellow-900">RMD Alert:</strong>
+                            <span class="text-yellow-800" id="alert1"> At age 73, you'll be required to withdraw minimum distributions from traditional accounts</span>
+                        </div>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-600 p-4" id="alert2Container">
+                            <strong class="text-blue-900">Medicare IRMAA:</strong>
+                            <span class="text-blue-800" id="alert2"> Keep withdrawals under $103,000 to avoid higher Medicare premiums</span>
+                        </div>
+
+                        <div class="bg-green-50 border-l-4 border-green-600 p-4">
+                            <strong class="text-green-900">Roth Conversion Opportunity:</strong>
+                            <span class="text-green-800" id="alert3"> Convert traditional to Roth during low-income years</span>
+                        </div>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-600 p-4">
+                            <strong class="text-blue-900">State Tax:</strong>
+                            <span class="text-blue-800" id="alert4"> Consider your state's income tax impact on withdrawals</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" style="display: none;">
+                <!-- Roth Conversion Calculator -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-400 mb-6">
+                    <h2 class="text-2xl font-bold text-purple-900 mb-4">
+                        🪜 Roth Conversion Ladder Planning
+                    </h2>
+
+                    <div class="bg-purple-50 border-l-4 border-purple-600 p-4 mb-4">
+                        <h3 class="font-bold text-purple-900 mb-2">💡 What is a Roth Conversion Ladder?</h3>
+                        <p class="text-sm text-purple-800">
+                            Convert Traditional IRA → Roth IRA over several years. After 5 years, you can withdraw converted amounts 
+                            tax-free and penalty-free, even before age 59½. This strategy helps you access retirement funds early, 
+                            reduce future RMDs, and optimize your tax bracket.
+                        </p>
+                    </div>
+
+                    <div id="conversionRecommendations" class="space-y-4">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Strategy Comparison -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400 mb-6">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-4">
+                        📊 Withdrawal Strategy Comparison
+                    </h2>
+
+                    <div class="grid md:grid-cols-4 gap-4">
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center hover:border-yellow-400 transition-colors">
+                            <h3 class="text-red-600 font-bold mb-2">❌ Worst Strategy</h3>
+                            <p class="text-sm mb-2">Traditional accounts first</p>
+                            <div class="text-xl text-red-600 font-bold" id="worstTax">$0</div>
+                            <p class="text-gray-600 text-sm">Medicare IRMAA triggered</p>
+                        </div>
+
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center hover:border-yellow-400 transition-colors">
+                            <h3 class="text-yellow-600 font-bold mb-2">⚠️ Basic Strategy</h3>
+                            <p class="text-sm mb-2">Taxable accounts first</p>
+                            <div class="text-xl text-yellow-600 font-bold" id="basicTax">$0</div>
+                            <p class="text-gray-600 text-sm">No major penalties</p>
+                        </div>
+
+                        <div class="border-2 border-green-600 bg-green-50 rounded-lg p-4 text-center">
+                            <h3 class="text-green-600 font-bold mb-2">✅ Optimized Strategy</h3>
+                            <p class="text-sm mb-2">Tax bracket balancing</p>
+                            <div class="text-2xl text-green-600 font-bold" id="optimizedTax">$0</div>
+                            <p class="text-green-600 font-semibold" id="savings">Saves $0!</p>
+                        </div>
+
+                        <div class="border-2 border-gray-200 rounded-lg p-4 text-center hover:border-yellow-400 transition-colors">
+                            <h3 class="text-blue-600 font-bold mb-2">🎯 Conservative Strategy</h3>
+                            <p class="text-sm mb-2">Cash bridge to 70</p>
+                            <div class="text-xl text-blue-600 font-bold" id="conservativeTax">$0</div>
+                            <p class="text-gray-600 text-sm">Lower risk approach</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 bg-green-50 border-l-4 border-green-600 rounded-lg p-6">
+                        <h3 class="text-green-700 font-bold text-lg mb-4">📊 Your Recommended Year-by-Year Plan</h3>
+                        <div class="grid md:grid-cols-4 gap-4">
+                            <div class="bg-white rounded-lg p-4 text-center">
+                                <div class="font-bold mb-2">Ages 55-59</div>
+                                <div class="mb-1">Cash: $80k/year</div>
+                                <div class="text-gray-600 text-sm">Bridge to penalty-free access</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 text-center">
+                                <div class="font-bold mb-2">Ages 60-65</div>
+                                <div class="mb-1">Taxable: $50k + Roth: $30k</div>
+                                <div class="text-gray-600 text-sm">Stay in 22% bracket</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 text-center">
+                                <div class="font-bold mb-2">Ages 66-72</div>
+                                <div class="mb-1">Traditional: $60k + Roth: $20k</div>
+                                <div class="text-gray-600 text-sm">Optimize before RMDs</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 text-center">
+                                <div class="font-bold mb-2">Ages 73+</div>
+                                <div class="mb-1">RMDs + Roth as needed</div>
+                                <div class="text-gray-600 text-sm">Required distributions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Year-by-Year Details -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400 mb-6">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-4">📋 Detailed Year-by-Year Breakdown (First 10 Years)</h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-blue-900 text-white">
+                                <tr>
+                                    <th class="p-2 text-left">Age</th>
+                                    <th class="p-2 text-right">Expenses</th>
+                                    <th class="p-2 text-right">Trad Dist</th>
+                                    <th class="p-2 text-right">Trad Bal</th>
+                                    <th class="p-2 text-right">Roth Dist</th>
+                                    <th class="p-2 text-right">Roth Bal</th>
+                                    <th class="p-2 text-right">Tax Dist</th>
+                                    <th class="p-2 text-right">Tax Bal</th>
+                                    <th class="p-2 text-right">Cash Dist</th>
+                                    <th class="p-2 text-right">Cash Bal</th>
+                                    <th class="p-2 text-right">SS Income</th>
+                                    <th class="p-2 text-right">Fed Tax</th>
+                                    <th class="p-2 text-right">State Tax</th>
+                                    <th class="p-2 text-right bg-purple-700">Roth Conv</th>
+                                    <th class="p-2 text-right bg-green-700">Total Assets</th>
+                                </tr>
+                            </thead>
+                            <tbody id="yearTable">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                <p class="text-sm text-blue-900">
+                    <strong>Note:</strong> This shows the first 15 years from your current age (${formData.currentAge}). 
+                    Blue highlighted rows 🔄 indicate pre-retirement years with Roth conversions. 
+                    Green rows show retirement years with distributions. 
+                    The complete projection to age ${formData.currentAge + 49} is available in the PDF download.
+                </p>
+            </div>
+                </div>
+
+                <!-- Export Section -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-2">📄 Export Your Results</h2>
+                    <p class="text-gray-600 mb-4">Download your personalized retirement withdrawal strategy</p>
+                    
+                    <button onclick="generatePDF()" id="pdfButton"
+                        class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-bold py-3 px-8 rounded-lg hover:shadow-lg transition-all">
+                        📥 Download PDF Report (All Years to Age 105)
+                    </button>
+                    
+                    <div id="pdfStatus" class="mt-4 p-4 rounded-lg" style="display: none;"></div>
+
+                    <div class="mt-4 p-4 bg-green-50 border-l-4 border-green-600 rounded-lg text-left">
+                        <h3 class="font-bold text-green-900 mb-2">📊 Key Insights from Your Analysis:</h3>
+                        <ul class="space-y-2 text-sm text-green-800" id="insightsList">
+                        </ul>
+                    </div>
+
+                    <div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-600 rounded-lg text-left">
+                        <h3 class="font-bold text-yellow-900 mb-2">⚠️ Important Disclaimers:</h3>
+                        <ul class="space-y-1 text-sm text-yellow-800">
+                            <li>• This tool is for educational purposes only and should not be considered financial advice</li>
+                            <li>• Results are based on assumptions you provide and current tax laws (2025)</li>
+                            <li>• Tax laws, Medicare premiums, and RMD rules may change over time</li>
+                            <li>• Your data is processed entirely in your browser and is never stored or transmitted</li>
+                            <li>• Please consult with a qualified financial advisor before making investment decisions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 text-center text-gray-500 text-sm pb-4">
+                <p>RetireWise Calculator v8 • Built with privacy and simplicity in mind</p>
+                <p class="mt-2">© 2025 RetireWise • For educational purposes only • Not financial advice</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tax and calculation constants
+        const TAX_BRACKETS = [
+            { min: 0, max: 11600, rate: 0.10 },
+            { min: 11601, max: 47150, rate: 0.12 },
+            { min: 47151, max: 100525, rate: 0.22 },
+            { min: 100526, max: 191950, rate: 0.24 },
+            { min: 191951, max: 243725, rate: 0.32 },
+            { min: 243726, max: 609350, rate: 0.35 },
+            { min: 609351, max: Infinity, rate: 0.37 }
+        ];
+
+        const IRMAA_THRESHOLDS = [
+            { income: 103000, surcharge: 0 },
+            { income: 129000, surcharge: 889.80 },
+            { income: 161000, surcharge: 2247.60 },
+            { income: 193000, surcharge: 3605.40 },
+            { income: 500000, surcharge: 4963.20 }
+        ];
+
+        const STATE_TAX_RATES = {
+            'NC': 0.0525,
+            'FL': 0,
+            'TX': 0,
+            'CA': 0.093,
+            'NY': 0.0685
+        };
+
+        const STATE_NAMES = {
+            'NC': 'North Carolina',
+            'FL': 'Florida',
+            'TX': 'Texas',
+            'CA': 'California',
+            'NY': 'New York'
+        };
+
+        let globalResults = null;
+        let globalProfile = null;
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function calculateTax(income) {
+            let tax = 0;
+            for (let bracket of TAX_BRACKETS) {
+                if (income > bracket.min) {
+                    const taxableInBracket = Math.min(income, bracket.max) - bracket.min + 1;
+                    tax += taxableInBracket * bracket.rate;
+                } else {
+                    break;
+                }
+            }
+            return tax;
+        }
+
+        function calculateRMD(balance, age) {
+            const lifeExpectancy = {
+                73: 26.5, 74: 25.5, 75: 24.6, 76: 23.7,
+                77: 22.9, 78: 22.0, 79: 21.1, 80: 20.2
+            };
+            if (age < 73) return 0;
+            const factor = lifeExpectancy[age] || (20.2 - (age - 80) * 0.9);
+            return balance / factor;
+        }
+
+        function getIRMAASurcharge(income) {
+            for (let i = IRMAA_THRESHOLDS.length - 1; i >= 0; i--) {
+                if (income >= IRMAA_THRESHOLDS[i].income) {
+                    return IRMAA_THRESHOLDS[i].surcharge;
+                }
+            }
+            return 0;
+        }
+
+        function calculateYearWithdrawal(balances, needed, age, strategy) {
+            let withdrawal = { traditional: 0, roth: 0, taxable: 0, cash: 0 };
+            let remaining = needed;
+            const rmd = age >= 73 ? calculateRMD(balances.traditional, age) : 0;
+
+            switch (strategy) {
+                case 'traditional-first':
+                    if (balances.traditional > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.traditional);
+                        withdrawal.traditional = take;
+                        remaining -= take;
+                    }
+                    if (balances.taxable > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.taxable);
+                        withdrawal.taxable = take;
+                        remaining -= take;
+                    }
+                    if (balances.roth > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.roth);
+                        withdrawal.roth = take;
+                        remaining -= take;
+                    }
+                    break;
+
+                case 'taxable-first':
+                    if (balances.taxable > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.taxable);
+                        withdrawal.taxable = take;
+                        remaining -= take;
+                    }
+                    if (balances.traditional > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.traditional);
+                        withdrawal.traditional = take;
+                        remaining -= take;
+                    }
+                    if (balances.roth > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.roth);
+                        withdrawal.roth = take;
+                        remaining -= take;
+                    }
+                    break;
+
+                case 'optimized':
+                    if (age < 60 && balances.cash > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.cash);
+                        withdrawal.cash = take;
+                        remaining -= take;
+                    } else {
+                        const maxTraditional = Math.min(100525, remaining * 0.6);
+                        if (balances.traditional > 0 && remaining > 0) {
+                            const take = Math.min(Math.min(remaining, balances.traditional), maxTraditional);
+                            withdrawal.traditional = take;
+                            remaining -= take;
+                        }
+                        if (balances.taxable > 0 && remaining > 0) {
+                            const take = Math.min(remaining, balances.taxable);
+                            withdrawal.taxable = take;
+                            remaining -= take;
+                        }
+                        if (balances.roth > 0 && remaining > 0) {
+                            const take = Math.min(remaining, balances.roth);
+                            withdrawal.roth = take;
+                            remaining -= take;
+                        }
+                    }
+                    break;
+
+                case 'conservative':
+                    if (age < 70 && balances.cash > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.cash);
+                        withdrawal.cash = take;
+                        remaining -= take;
+                    }
+                    if (balances.taxable > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.taxable);
+                        withdrawal.taxable = take;
+                        remaining -= take;
+                    }
+                    if (balances.traditional > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.traditional);
+                        withdrawal.traditional = take;
+                        remaining -= take;
+                    }
+                    if (balances.roth > 0 && remaining > 0) {
+                        const take = Math.min(remaining, balances.roth);
+                        withdrawal.roth = take;
+                        remaining -= take;
+                    }
+                    break;
+            }
+
+            if (rmd > withdrawal.traditional) {
+                withdrawal.traditional = rmd;
+            }
+
+            return withdrawal;
+        }
+
+        function simulateStrategy(profile, strategy, years, stateTaxRate) {
+            let totalTax = 0;
+            let totalIRMAA = 0;
+            let traditional = profile.traditional401k;
+            let roth = profile.rothIRA;
+            let taxable = profile.taxableBrokerage;
+            let cash = profile.cashSavings;
+            let yearPlan = [];
+            let currentExpenses = profile.annualExpenses;
+
+            // Add years from current age to retirement age (pre-retirement years)
+            const preRetirementYears = profile.retirementAge - profile.currentAge;
+            const totalYears = preRetirementYears + years;
+
+            for (let year = 0; year < totalYears; year++) {
+                const age = profile.currentAge + year;
+                const isPreRetirement = age < profile.retirementAge;
+                
+                if (year > 0) {
+                    currentExpenses = currentExpenses * (1 + profile.inflationRate / 100);
+                }
+                
+                const ssIncome = (age >= profile.ssStartAge) ? profile.ssBenefit * 12 : 0;
+                
+                let withdrawal = { traditional: 0, roth: 0, taxable: 0, cash: 0 };
+                let rothConversion = 0;
+                
+                // Pre-retirement: Only do Roth conversions, no withdrawals
+                if (isPreRetirement) {
+                    // Calculate optimal conversion amount
+                    const assumedIncome = 20000; // Assumed income before full retirement
+                    const bracket22Top = 100525;
+                    const bracket12Top = 47150;
+                    
+                    if (traditional > 0) {
+                        if (assumedIncome < bracket12Top) {
+                            rothConversion = Math.min(traditional, bracket12Top - assumedIncome);
+                        } else if (assumedIncome < bracket22Top) {
+                            rothConversion = Math.min(traditional, bracket22Top - assumedIncome);
+                        }
+                        
+                        // Apply the conversion
+                        if (rothConversion > 0) {
+                            traditional -= rothConversion;
+                            roth += rothConversion;
+                            // Add conversion tax to total (conversion is taxable income)
+                            const conversionTax = calculateTax(assumedIncome + rothConversion) - calculateTax(assumedIncome);
+                            const stateConversionTax = (assumedIncome + rothConversion) * stateTaxRate - (assumedIncome * stateTaxRate);
+                            totalTax += conversionTax + stateConversionTax;
+                        }
+                    }
+                } else {
+                    // Post-retirement: Normal withdrawals
+                    const needed = Math.max(0, currentExpenses - ssIncome);
+                    
+                    withdrawal = calculateYearWithdrawal(
+                        {traditional, roth, taxable, cash}, 
+                        needed, 
+                        age, 
+                        strategy
+                    );
+                }
+
+                // Apply growth to all accounts
+                traditional = (traditional - withdrawal.traditional) * (1 + profile.annualGrowth / 100);
+                roth = (roth - withdrawal.roth) * (1 + profile.annualGrowth / 100);
+                taxable = (taxable - withdrawal.taxable) * (1 + profile.annualGrowth / 100);
+                cash = cash - withdrawal.cash;
+
+                traditional = Math.max(0, traditional);
+                roth = Math.max(0, roth);
+                taxable = Math.max(0, taxable);
+                cash = Math.max(0, cash);
+
+                const taxableSSIncome = ssIncome * 0.85;
+                const taxableIncome = withdrawal.traditional + withdrawal.taxable * 0.5 + taxableSSIncome;
+                const federalTax = calculateTax(taxableIncome);
+                const stateTax = taxableIncome * stateTaxRate;
+                const irmaa = getIRMAASurcharge(taxableIncome);
+
+                totalTax += federalTax + stateTax;
+                totalIRMAA += irmaa;
+
+                const totalAssets = traditional + roth + taxable + cash;
+
+                yearPlan.push({
+                    age,
+                    withdrawal,
+                    expenses: Math.round(currentExpenses),
+                    ssIncome: Math.round(ssIncome),
+                    taxableIncome: Math.round(taxableIncome),
+                    federalTax: Math.round(federalTax),
+                    stateTax: Math.round(stateTax),
+                    irmaa: Math.round(irmaa),
+                    rothConversion: Math.round(rothConversion),
+                    balances: {
+                        traditional: Math.round(traditional),
+                        roth: Math.round(roth),
+                        taxable: Math.round(taxable),
+                        cash: Math.round(cash)
+                    },
+                    totalAssets: Math.round(totalAssets)
+                });
+            }
+
+            return {
+                totalTax: Math.round(totalTax),
+                totalIRMAA: Math.round(totalIRMAA),
+                yearPlan
+            };
+        }
+
+        function calculateStrategy() {
+            const button = document.getElementById('calcButton');
+            button.textContent = 'Calculating...';
+            button.disabled = true;
+
+            const formData = {
+                currentAge: parseInt(document.getElementById('currentAge').value),
+                retirementAge: parseInt(document.getElementById('retirementAge').value),
+                state: document.getElementById('state').value,
+                annualExpenses: parseInt(document.getElementById('annualExpenses').value),
+                annualGrowth: parseFloat(document.getElementById('annualGrowth').value),
+                inflationRate: parseFloat(document.getElementById('inflationRate').value),
+                ssBenefit: parseInt(document.getElementById('ssBenefit').value),
+                ssStartAge: parseInt(document.getElementById('ssStartAge').value),
+                traditional401k: parseInt(document.getElementById('traditional401k').value),
+                rothIRA: parseInt(document.getElementById('rothIRA').value),
+                taxableBrokerage: parseInt(document.getElementById('taxableBrokerage').value),
+                cashSavings: parseInt(document.getElementById('cashSavings').value)
+            };
+
+            setTimeout(() => {
+                const yearsInRetirement = 40;
+                const stateTaxRate = STATE_TAX_RATES[formData.state];
+
+                const strategies = {
+                    worst: simulateStrategy(formData, 'traditional-first', yearsInRetirement, stateTaxRate),
+                    basic: simulateStrategy(formData, 'taxable-first', yearsInRetirement, stateTaxRate),
+                    optimized: simulateStrategy(formData, 'optimized', yearsInRetirement, stateTaxRate),
+                    conservative: simulateStrategy(formData, 'conservative', yearsInRetirement, stateTaxRate)
+                };
+
+                globalResults = strategies;
+                globalProfile = formData;
+
+                updateUI(strategies, formData);
+
+                button.textContent = 'Recalculate Strategy';
+                button.disabled = false;
+                
+                document.getElementById('resultsSection').style.display = 'block';
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 1000);
+        }
+
+        function updateUI(strategies, formData) {
+            // Update strategy cards
+            document.getElementById('worstTax').textContent = formatCurrency(strategies.worst.totalTax);
+            document.getElementById('basicTax').textContent = formatCurrency(strategies.basic.totalTax);
+            document.getElementById('optimizedTax').textContent = formatCurrency(strategies.optimized.totalTax);
+            document.getElementById('conservativeTax').textContent = formatCurrency(strategies.conservative.totalTax);
+            document.getElementById('savings').textContent = `Saves ${formatCurrency(strategies.worst.totalTax - strategies.optimized.totalTax)}!`;
+
+            // Update Roth Conversion recommendations
+            updateRothConversionRecommendations(formData, strategies);
+
+            // Update alerts
+            const rmdYear = strategies.optimized.yearPlan.find(year => year.age >= 73);
+            if (rmdYear) {
+                document.getElementById('alert1').textContent = ` At age 73, you'll be required to withdraw ${formatCurrency(rmdYear.withdrawal.traditional)} minimum from traditional accounts`;
+            }
+
+            const irmaaYear = strategies.optimized.yearPlan.find(year => year.irmaa > 0);
+            const alert2Container = document.getElementById('alert2Container');
+            if (irmaaYear) {
+                alert2Container.className = 'bg-yellow-50 border-l-4 border-yellow-600 p-4';
+                document.getElementById('alert2').innerHTML = ` Income of ${formatCurrency(irmaaYear.taxableIncome)} triggers ${formatCurrency(irmaaYear.irmaa)} in extra premiums`;
+            } else {
+                alert2Container.className = 'bg-green-50 border-l-4 border-green-600 p-4';
+                document.getElementById('alert2').innerHTML = ' Your strategy avoids IRMAA surcharges!';
+            }
+
+            const stateTaxRate = STATE_TAX_RATES[formData.state];
+            const stateName = STATE_NAMES[formData.state];
+            document.getElementById('alert4').textContent = ` ${stateName} ${stateTaxRate > 0 ? `has ${(stateTaxRate * 100).toFixed(2)}% income tax` : 'has no state income tax - great advantage!'}`;
+
+            // Update Roth conversion opportunity alert
+            const conversionOpportunity = calculateConversionOpportunity(formData);
+            document.getElementById('alert3').innerHTML = ` ${conversionOpportunity.message}`;
+
+            // Update year table
+            const tbody = document.getElementById('yearTable');
+            tbody.innerHTML = '';
+            
+            // Show first 15 years from current age
+            const displayYears = strategies.optimized.yearPlan.slice(0, 15);
+            
+            displayYears.forEach((year, idx) => {
+                const row = document.createElement('tr');
+                
+                // Highlight pre-retirement years
+                const isPreRetirement = year.age < formData.retirementAge;
+                const rowBg = isPreRetirement ? (idx % 2 === 0 ? 'bg-blue-50' : 'bg-blue-100') : (idx % 2 === 0 ? 'bg-gray-50' : 'bg-white');
+                row.className = rowBg;
+                
+                row.innerHTML = `
+                    <td class="p-2 font-bold ${isPreRetirement ? 'text-blue-900' : 'text-green-900'}">${year.age}${isPreRetirement ? ' 🔄' : ''}</td>
+                    <td class="p-2 text-right font-semibold text-purple-700">${formatCurrency(year.expenses)}</td>
+                    <td class="p-2 text-right">${year.withdrawal.traditional > 0 ? formatCurrency(year.withdrawal.traditional) : '-'}</td>
+                    <td class="p-2 text-right font-semibold">${formatCurrency(year.balances.traditional)}</td>
+                    <td class="p-2 text-right">${year.withdrawal.roth > 0 ? formatCurrency(year.withdrawal.roth) : '-'}</td>
+                    <td class="p-2 text-right font-semibold">${formatCurrency(year.balances.roth)}</td>
+                    <td class="p-2 text-right">${year.withdrawal.taxable > 0 ? formatCurrency(year.withdrawal.taxable) : '-'}</td>
+                    <td class="p-2 text-right font-semibold">${formatCurrency(year.balances.taxable)}</td>
+                    <td class="p-2 text-right ${year.withdrawal.cash > 0 ? 'bg-yellow-50 font-bold text-yellow-700' : ''}">${year.withdrawal.cash > 0 ? formatCurrency(year.withdrawal.cash) : '-'}</td>
+                    <td class="p-2 text-right font-semibold">${formatCurrency(year.balances.cash)}</td>
+                    <td class="p-2 text-right ${year.ssIncome > 0 ? 'bg-green-50 font-bold text-green-700' : ''}">${year.ssIncome > 0 ? formatCurrency(year.ssIncome) : '-'}</td>
+                    <td class="p-2 text-right ${year.federalTax > 0 ? 'font-bold text-red-700' : ''}">${year.federalTax > 0 ? formatCurrency(year.federalTax) : '-'}</td>
+                    <td class="p-2 text-right ${year.stateTax > 0 ? 'font-bold text-orange-700' : ''}">${year.stateTax > 0 ? formatCurrency(year.stateTax) : '-'}</td>
+                    <td class="p-2 text-right bg-purple-50 font-bold text-purple-700">${year.rothConversion > 0 ? formatCurrency(year.rothConversion) : '-'}</td>
+                    <td class="p-2 text-right bg-green-50 font-bold text-green-700">${formatCurrency(year.totalAssets)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Update insights
+            const insightsList = document.getElementById('insightsList');
+            const annualSS = formData.ssBenefit * 12;
+            insightsList.innerHTML = `
+                <li>• <strong>Investment Growth:</strong> Assuming ${formData.annualGrowth}% annual growth, your retirement accounts will continue to grow even as you make withdrawals</li>
+                <li>• <strong>Inflation Protection:</strong> With ${formData.inflationRate}% annual inflation, your expenses will increase over time - the strategy adjusts automatically</li>
+                <li>• <strong>Social Security Benefits:</strong> Starting at age ${formData.ssStartAge}, you'll receive ${formatCurrency(annualSS)} annually</li>
+                <li>• <strong>Tax Savings:</strong> Your optimized strategy could save you ${formatCurrency(strategies.worst.totalTax - strategies.optimized.totalTax)} compared to the worst-case scenario</li>
+                <li>• <strong>State Tax Impact:</strong> ${stateName} ${stateTaxRate > 0 ? `adds ${(stateTaxRate * 100).toFixed(2)}% state income tax` : 'has no state income tax, providing additional flexibility'}</li>
+            `;
+        }
+
+        function calculateConversionOpportunity(profile) {
+            // Calculate how much room exists in lower tax brackets
+            const currentIncome = 0; // Assuming retired with no W-2 income
+            const ssIncome = profile.currentAge >= profile.ssStartAge ? profile.ssBenefit * 12 * 0.85 : 0;
+            const totalCurrentIncome = currentIncome + ssIncome;
+            
+            // Tax bracket thresholds
+            const bracket12Top = 47150;
+            const bracket22Top = 100525;
+            
+            let recommendation = {};
+            
+            if (totalCurrentIncome < bracket12Top) {
+                const roomIn12Bracket = bracket12Top - totalCurrentIncome;
+                const taxOnConversion = roomIn12Bracket * 0.12;
+                recommendation = {
+                    amount: Math.round(roomIn12Bracket),
+                    bracket: '12%',
+                    tax: Math.round(taxOnConversion),
+                    message: `You could convert ${formatCurrency(Math.round(roomIn12Bracket))} to Roth and stay in the 12% tax bracket (paying only ${formatCurrency(Math.round(taxOnConversion))} in taxes)`
+                };
+            } else if (totalCurrentIncome < bracket22Top) {
+                const roomIn22Bracket = bracket22Top - totalCurrentIncome;
+                const taxOnConversion = roomIn22Bracket * 0.22;
+                recommendation = {
+                    amount: Math.round(roomIn22Bracket),
+                    bracket: '22%',
+                    tax: Math.round(taxOnConversion),
+                    message: `You could convert ${formatCurrency(Math.round(roomIn22Bracket))} to Roth and stay in the 22% tax bracket (paying ${formatCurrency(Math.round(taxOnConversion))} in taxes)`
+                };
+            } else {
+                recommendation = {
+                    amount: 0,
+                    bracket: '24%+',
+                    tax: 0,
+                    message: 'Your current income is already in the 24% bracket. Consider conversions in lower-income years'
+                };
+            }
+            
+            return recommendation;
+        }
+
+        function updateRothConversionRecommendations(profile, strategies) {
+            const container = document.getElementById('conversionRecommendations');
+            
+            // Calculate optimal conversions for years before retirement
+            const yearsToRetirement = profile.retirementAge - profile.currentAge;
+            const preRetirementYears = [];
+            
+            for (let i = 0; i < Math.min(yearsToRetirement, 10); i++) {
+                const age = profile.currentAge + i;
+                const year = i + 1;
+                
+                // Assume low/no income in early retirement planning years
+                const assumedIncome = age < profile.retirementAge ? 20000 : 0; // Some income before full retirement
+                
+                // Calculate room in 22% bracket
+                const bracket22Top = 100525;
+                const bracket12Top = 47150;
+                
+                let conversionAmount, bracket, estimatedTax;
+                
+                if (assumedIncome < bracket12Top) {
+                    conversionAmount = bracket12Top - assumedIncome;
+                    bracket = '12%';
+                    estimatedTax = conversionAmount * 0.12;
+                } else if (assumedIncome < bracket22Top) {
+                    conversionAmount = bracket22Top - assumedIncome;
+                    bracket = '22%';
+                    estimatedTax = conversionAmount * 0.22;
+                } else {
+                    conversionAmount = 25000; // Conservative amount
+                    bracket = '24%';
+                    estimatedTax = conversionAmount * 0.24;
+                }
+                
+                preRetirementYears.push({
+                    year: year,
+                    age: age,
+                    conversionAmount: Math.round(conversionAmount),
+                    bracket: bracket,
+                    estimatedTax: Math.round(estimatedTax),
+                    availableAge: age + 5
+                });
+            }
+            
+            // Calculate total potential conversions
+            const totalConversions = preRetirementYears.reduce((sum, year) => sum + year.conversionAmount, 0);
+            const totalTaxes = preRetirementYears.reduce((sum, year) => sum + year.estimatedTax, 0);
+            
+            // Generate HTML
+            let html = `
+                <div class="bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg p-6 mb-4">
+                    <h3 class="text-xl font-bold text-purple-900 mb-2">📊 Your Roth Conversion Opportunity</h3>
+                    <div class="grid md:grid-cols-3 gap-4 mt-4">
+                        <div class="bg-white rounded-lg p-4 text-center">
+                            <div class="text-sm text-gray-600 mb-1">Years to Convert</div>
+                            <div class="text-2xl font-bold text-purple-700">${preRetirementYears.length}</div>
+                            <div class="text-xs text-gray-500">Before retirement</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 text-center">
+                            <div class="text-sm text-gray-600 mb-1">Total Conversions</div>
+                            <div class="text-2xl font-bold text-blue-700">${formatCurrency(totalConversions)}</div>
+                            <div class="text-xs text-gray-500">Traditional → Roth</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 text-center">
+                            <div class="text-sm text-gray-600 mb-1">Total Tax to Pay</div>
+                            <div class="text-2xl font-bold text-green-700">${formatCurrency(totalTaxes)}</div>
+                            <div class="text-xs text-gray-500">Avg ${((totalTaxes/totalConversions)*100).toFixed(1)}% rate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-purple-200 rounded-lg p-4 mb-4">
+                    <h4 class="font-bold text-purple-900 mb-3">📅 Year-by-Year Conversion Plan</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-purple-900 text-white">
+                                <tr>
+                                    <th class="p-2 text-left">Year</th>
+                                    <th class="p-2 text-left">Age</th>
+                                    <th class="p-2 text-right">Convert Amount</th>
+                                    <th class="p-2 text-center">Tax Bracket</th>
+                                    <th class="p-2 text-right">Est. Tax</th>
+                                    <th class="p-2 text-center">Available At Age</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+            
+            preRetirementYears.forEach((year, idx) => {
+                html += `
+                    <tr class="${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}">
+                        <td class="p-2 font-semibold">Year ${year.year}</td>
+                        <td class="p-2">${year.age}</td>
+                        <td class="p-2 text-right font-bold text-purple-700">${formatCurrency(year.conversionAmount)}</td>
+                        <td class="p-2 text-center">
+                            <span class="px-2 py-1 rounded ${
+                                year.bracket === '12%' ? 'bg-green-100 text-green-800' :
+                                year.bracket === '22%' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-red-100 text-red-800'
+                            }">${year.bracket}</span>
+                        </td>
+                        <td class="p-2 text-right">${formatCurrency(year.estimatedTax)}</td>
+                        <td class="p-2 text-center font-bold text-green-700">${year.availableAge}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-green-50 border-l-4 border-green-600 p-4">
+                        <h4 class="font-bold text-green-900 mb-2">✅ Benefits</h4>
+                        <ul class="text-sm text-green-800 space-y-1">
+                            <li>• Tax-free withdrawals after 5 years</li>
+                            <li>• Access funds before age 59½ penalty-free</li>
+                            <li>• Reduce future RMDs by ${formatCurrency(Math.round(totalConversions * 0.0377))}/year</li>
+                            <li>• Lower taxable income in retirement</li>
+                            <li>• Avoid IRMAA Medicare surcharges</li>
+                        </ul>
+                    </div>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4">
+                        <h4 class="font-bold text-yellow-900 mb-2">⚠️ Considerations</h4>
+                        <ul class="text-sm text-yellow-800 space-y-1">
+                            <li>• Need cash to pay ${formatCurrency(totalTaxes)} in taxes</li>
+                            <li>• Don't use IRA money to pay taxes</li>
+                            <li>• Each conversion has its own 5-year clock</li>
+                            <li>• Conversions count as taxable income</li>
+                            <li>• May affect ACA subsidies if applicable</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-600 rounded-lg">
+                    <h4 class="font-bold text-blue-900 mb-2">💡 Strategy Tip</h4>
+                    <p class="text-sm text-blue-800">
+                        <strong>Best years to convert:</strong> Years ${profile.currentAge} to ${profile.currentAge + 4} (before age ${profile.currentAge + 5}), 
+                        especially if you have low or no W-2 income. This builds a "ladder" that provides penalty-free access starting at age ${profile.currentAge + 5}, 
+                        perfect for early retirement or bridging to Social Security at ${profile.ssStartAge}.
+                    </p>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function updateUI(strategies, formData) {
+            // Update strategy cards
+            document.getElementById('worstTax').textContent = formatCurrency(strategies.worst.totalTax);
+            document.getElementById('basicTax').textContent = formatCurrency(strategies.basic.totalTax);
+            document.getElementById('optimizedTax').textContent = formatCurrency(strategies.optimized.totalTax);
+            document.getElementById('conservativeTax').textContent = formatCurrency(strategies.conservative.totalTax);
+            document.getElementById('savings').textContent = `Saves ${formatCurrency(strategies.worst.totalTax - strategies.optimized.totalTax)}!`;
+
+            // Update alerts
+            const rmdYear = strategies.optimized.yearPlan.find(year => year.age >= 73);
+            if (rmdYear) {
+                document.getElementById('alert1').textContent = ` At age 73, you'll be required to withdraw ${formatCurrency(rmdYear.withdrawal.traditional)} minimum from traditional accounts`;
+            }
+
+            const irmaaYear = strategies.optimized.yearPlan.find(year => year.irmaa > 0);
+            const alert2Container = document.getElementById('alert2Container');
+            if (irmaaYear) {
+                alert2Container.className = 'bg-yellow-50 border-l-4 border-yellow-600 p-4';
+                document.getElementById('alert2').innerHTML = ` Income of ${formatCurrency(irmaaYear.taxableIncome)} triggers ${formatCurrency(irmaaYear.irmaa)} in extra premiums`;
+            } else {
+                alert2Container.className = 'bg-green-50 border-l-4 border-green-600 p-4';
+                document.getElementById('alert2').innerHTML = ' Your strategy avoids IRMAA surcharges!';
+            }
+
+            const stateTaxRate = STATE_TAX_RATES[formData.state];
+            const stateName = STATE_NAMES[formData.state];
+            document.getElementById('alert4').textContent = ` ${stateName} ${stateTaxRate > 0 ? `has ${(stateTaxRate * 100).toFixed(2)}% income tax` : 'has no state income tax - great advantage!'}`;
+
+            // Update year table
+            const tbody = document.getElementById('yearTable');
+            tbody.innerHTML = '';
+            strategies.optimized.yearPlan.slice(0, 10).forEach((year, idx) => {
+                const row = document.createElement('tr');
+                row.className = idx % 2 === 0 ? 'bg-gray-50' : 'bg-white';
+                row.innerHTML = `
+                    <td class="p-2 font-bold text-blue-900">Age ${year.age}</td>
+                    <td class="p-2 text-right font-semibold text-purple-700">${formatCurrency(year.expenses)}</td>
+                    <td class="p-2 text-right">${formatCurrency(year.withdrawal.traditional)}</td>
+                    <td class="p-2 text-right">${formatCurrency(year.withdrawal.roth)}</td>
+                    <td class="p-2 text-right">${formatCurrency(year.withdrawal.taxable)}</td>
+                    <td class="p-2 text-right">${formatCurrency(year.withdrawal.cash)}</td>
+                    <td class="p-2 text-right bg-green-50">${formatCurrency(year.ssIncome)}</td>
+                    <td class="p-2 text-right font-bold">${formatCurrency(year.federalTax + year.stateTax)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Update insights
+            const insightsList = document.getElementById('insightsList');
+            const annualSS = formData.ssBenefit * 12;
+            insightsList.innerHTML = `
+                <li>• <strong>Investment Growth:</strong> Assuming ${formData.annualGrowth}% annual growth, your retirement accounts will continue to grow even as you make withdrawals</li>
+                <li>• <strong>Inflation Protection:</strong> With ${formData.inflationRate}% annual inflation, your expenses will increase over time - the strategy adjusts automatically</li>
+                <li>• <strong>Social Security Benefits:</strong> Starting at age ${formData.ssStartAge}, you'll receive ${formatCurrency(annualSS)} annually</li>
+                <li>• <strong>Tax Savings:</strong> Your optimized strategy could save you ${formatCurrency(strategies.worst.totalTax - strategies.optimized.totalTax)} compared to the worst-case scenario</li>
+                <li>• <strong>State Tax Impact:</strong> ${stateName} ${stateTaxRate > 0 ? `adds ${(stateTaxRate * 100).toFixed(2)}% state income tax` : 'has no state income tax, providing additional flexibility'}</li>
+            `;
+        }
+
+        function generatePDF() {
+            if (!window.jspdf || !globalResults || !globalProfile) {
+                const statusDiv = document.getElementById('pdfStatus');
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'bg-red-50 border-l-4 border-red-600 p-4';
+                statusDiv.textContent = 'Please calculate your strategy first before downloading the PDF.';
+                return;
+            }
+
+            const button = document.getElementById('pdfButton');
+            button.textContent = 'Generating PDF...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // Header
+                    doc.setFontSize(20);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text('RetireWise Calculator Report', 20, 20);
+                    
+                    doc.setFontSize(12);
+                    doc.setTextColor(100, 100, 100);
+                    doc.text(`Generated on ${new Date().toLocaleDateString()}`, 20, 30);
+                    
+                    // Profile Section
+                    doc.setFontSize(16);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text('Your Retirement Profile', 20, 50);
+                    
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    let yPos = 60;
+                    
+                    const profileData = [
+                        `Current Age: ${globalProfile.currentAge}`,
+                        `Retirement Age: ${globalProfile.retirementAge}`,
+                        `Annual Expenses: ${formatCurrency(globalProfile.annualExpenses)}`,
+                        `Annual Growth Rate: ${globalProfile.annualGrowth.toFixed(1)}%`,
+                        `Inflation Rate: ${globalProfile.inflationRate.toFixed(1)}%`,
+                        `Social Security: ${formatCurrency(globalProfile.ssBenefit)}/month starting at age ${globalProfile.ssStartAge}`,
+                        `State: ${STATE_NAMES[globalProfile.state]}`,
+                        `Traditional 401k/IRA: ${formatCurrency(globalProfile.traditional401k)}`,
+                        `Roth IRA: ${formatCurrency(globalProfile.rothIRA)}`,
+                        `Taxable Brokerage: ${formatCurrency(globalProfile.taxableBrokerage)}`,
+                        `Cash/Savings: ${formatCurrency(globalProfile.cashSavings)}`,
+                        `Total Assets: ${formatCurrency(globalProfile.traditional401k + globalProfile.rothIRA + globalProfile.taxableBrokerage + globalProfile.cashSavings)}`
+                    ];
+                    
+                    profileData.forEach(line => {
+                        doc.text(line, 20, yPos);
+                        yPos += 6;
+                    });
+
+                    // Strategy Comparison
+                    yPos += 10;
+                    doc.setFontSize(16);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text('Withdrawal Strategy Comparison', 20, yPos);
+                    yPos += 10;
+
+                    const strategies = [
+                        ['Strategy', 'Total Taxes', 'Key Characteristic'],
+                        ['Worst (Traditional First)', formatCurrency(globalResults.worst.totalTax), 'High tax brackets, IRMAA penalties'],
+                        ['Basic (Taxable First)', formatCurrency(globalResults.basic.totalTax), 'Moderate taxes, no major penalties'],
+                        ['Optimized (Recommended)', formatCurrency(globalResults.optimized.totalTax), 'Tax bracket management'],
+                        ['Conservative (Cash Bridge)', formatCurrency(globalResults.conservative.totalTax), 'Lower risk, delayed withdrawals']
+                    ];
+
+                    doc.autoTable({
+                        head: [strategies[0]],
+                        body: strategies.slice(1),
+                        startY: yPos,
+                        styles: { fontSize: 9 },
+                        headStyles: { fillColor: [30, 58, 138], textColor: 255 },
+                        alternateRowStyles: { fillColor: [248, 249, 250] }
+                    });
+
+                    yPos = doc.lastAutoTable.finalY + 15;
+
+                    // Tax Savings
+                    const savings = globalResults.worst.totalTax - globalResults.optimized.totalTax;
+                    doc.setFontSize(14);
+                    doc.setTextColor(5, 150, 105);
+                    doc.text(`Potential Tax Savings: ${formatCurrency(savings)}`, 20, yPos);
+                    yPos += 15;
+
+                    // Year-by-Year Plan
+                    doc.setFontSize(16);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text('Recommended Year-by-Year Plan (All Years from Current Age)', 20, yPos);
+                    yPos += 10;
+
+                    // Split into multiple tables for readability  
+                    const allYears = globalResults.optimized.yearPlan;
+                    const yearGroups = [];
+                    
+                    // Create groups of 10 years each
+                    for (let i = 0; i < allYears.length; i += 10) {
+                        const groupData = allYears.slice(i, i + 10);
+                        const startAge = groupData[0].age;
+                        const endAge = groupData[groupData.length - 1].age;
+                        yearGroups.push({
+                            title: `Ages ${startAge}-${endAge}`,
+                            data: groupData
+                        });
+                    }
+
+                    yearGroups.forEach((group, groupIdx) => {
+                        if (groupIdx > 0) {
+                            doc.addPage();
+                            yPos = 20;
+                        }
+
+                        doc.setFontSize(12);
+                        doc.setTextColor(30, 58, 138);
+                        doc.text(group.title, 20, yPos);
+                        yPos += 5;
+
+                        const yearData = group.data.map(year => [
+                            `${year.age}`,
+                            formatCurrency(year.expenses),
+                            year.withdrawal.traditional > 0 ? formatCurrency(year.withdrawal.traditional) : '-',
+                            formatCurrency(year.balances.traditional),
+                            year.withdrawal.roth > 0 ? formatCurrency(year.withdrawal.roth) : '-',
+                            formatCurrency(year.balances.roth),
+                            year.withdrawal.taxable > 0 ? formatCurrency(year.withdrawal.taxable) : '-',
+                            formatCurrency(year.balances.taxable),
+                            year.withdrawal.cash > 0 ? formatCurrency(year.withdrawal.cash) : '-',
+                            formatCurrency(year.balances.cash),
+                            year.ssIncome > 0 ? formatCurrency(year.ssIncome) : '-',
+                            year.federalTax > 0 ? formatCurrency(year.federalTax) : '-',
+                            year.stateTax > 0 ? formatCurrency(year.stateTax) : '-',
+                            year.rothConversion > 0 ? formatCurrency(year.rothConversion) : '-',
+                            formatCurrency(year.totalAssets)
+                        ]);
+
+                        doc.autoTable({
+                            head: [['Age', 'Exp', 'T.Dist', 'T.Bal', 'R.Dist', 'R.Bal', 'Tax.Dist', 'Tax.Bal', 'C.Dist', 'C.Bal', 'SS', 'Fed Tax', 'St Tax', 'R.Conv', 'Assets']],
+                            body: yearData,
+                            startY: yPos,
+                            styles: { fontSize: 5.2 },
+                            headStyles: { fillColor: [251, 191, 36], textColor: 0, fontSize: 5.2 },
+                            alternateRowStyles: { fillColor: [248, 249, 250] },
+                            columnStyles: {
+                                0: { fontStyle: 'bold' },
+                                1: { fontStyle: 'bold', textColor: [128, 0, 128] },
+                                3: { fontStyle: 'bold' },
+                                5: { fontStyle: 'bold' },
+                                7: { fontStyle: 'bold' },
+                                9: { fontStyle: 'bold' },
+                                11: { fontStyle: 'bold', textColor: [200, 0, 0] },
+                                12: { fontStyle: 'bold', textColor: [255, 100, 0] },
+                                13: { fontStyle: 'bold', textColor: [128, 0, 128] },
+                                14: { fontStyle: 'bold', textColor: [0, 128, 0] }
+                            }
+                        });
+
+                        yPos = doc.lastAutoTable.finalY + 10;
+                    });
+
+                    // Key Insights
+                    doc.addPage();
+                    yPos = 20;
+
+                    doc.setFontSize(16);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text('Key Insights & Recommendations', 20, yPos);
+                    yPos += 10;
+
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+
+                    const insights = generateInsights(globalProfile, globalResults);
+                    insights.forEach(insight => {
+                        const lines = doc.splitTextToSize(insight, 170);
+                        lines.forEach(line => {
+                            if (yPos > 280) {
+                                doc.addPage();
+                                yPos = 20;
+                            }
+                            doc.text(line, 20, yPos);
+                            yPos += 6;
+                        });
+                        yPos += 3;
+                    });
+
+                    // Footer
+                    doc.setFontSize(8);
+                    doc.setTextColor(100, 100, 100);
+                    const pageCount = doc.internal.getNumberOfPages();
+                    for (let i = 1; i <= pageCount; i++) {
+                        doc.setPage(i);
+                        doc.text('This report is for educational purposes only. Consult a qualified financial advisor.', 20, 280);
+                        doc.text(`Page ${i} of ${pageCount}`, 180, 280);
+                    }
+
+                    // Save PDF
+                    doc.save('RetireWise-Strategy-Report.pdf');
+
+                    // Show success message
+                    const statusDiv = document.getElementById('pdfStatus');
+                    statusDiv.style.display = 'block';
+                    statusDiv.className = 'bg-green-50 border-l-4 border-green-600 p-4';
+                    statusDiv.textContent = '✅ PDF downloaded successfully!';
+                    
+                    setTimeout(() => {
+                        statusDiv.style.display = 'none';
+                    }, 3000);
+
+                } catch (error) {
+                    const statusDiv = document.getElementById('pdfStatus');
+                    statusDiv.style.display = 'block';
+                    statusDiv.className = 'bg-red-50 border-l-4 border-red-600 p-4';
+                    statusDiv.textContent = 'Error generating PDF: ' + error.message;
+                }
+                
+                button.textContent = '📥 Download PDF Report (All Years to Age 105)';
+                button.disabled = false;
+            }, 500);
+        }
+
+        function generateInsights(profile, results) {
+            const insights = [];
+            const optimized = results.optimized;
+            const stateTaxRate = STATE_TAX_RATES[profile.state];
+
+            insights.push(`• Investment Growth: Assuming ${profile.annualGrowth.toFixed(1)}% annual growth, your retirement accounts will continue to grow even as you make withdrawals. This helps extend the longevity of your nest egg.`);
+
+            const year10Expenses = profile.annualExpenses * Math.pow(1 + profile.inflationRate / 100, 10);
+            insights.push(`• Inflation Protection: With ${profile.inflationRate.toFixed(1)}% annual inflation, your expenses will grow from ${formatCurrency(profile.annualExpenses)} to approximately ${formatCurrency(year10Expenses)} in 10 years. The strategy adjusts for this automatically.`);
+
+            const annualSS = profile.ssBenefit * 12;
+            if (profile.ssStartAge && annualSS > 0) {
+                insights.push(`• Social Security Benefits: Starting at age ${profile.ssStartAge}, you'll receive ${formatCurrency(annualSS)} annually, which will cover ${Math.round((annualSS / profile.annualExpenses) * 100)}% of your current expenses and reduce needed withdrawals.`);
+            }
+
+            const rmdAge = 73;
+            if (profile.traditional401k > 0) {
+                const estimatedRMD = calculateRMD(profile.traditional401k, rmdAge);
+                insights.push(`• RMD Planning: Starting at age ${rmdAge}, you'll need to withdraw approximately ${formatCurrency(estimatedRMD)} minimum from traditional accounts. Planning withdrawals before this age can help manage tax brackets.`);
+            }
+
+            if (stateTaxRate > 0) {
+                const stateName = STATE_NAMES[profile.state];
+                insights.push(`• State Tax Impact: Living in ${stateName} adds ${(stateTaxRate * 100).toFixed(2)}% state income tax on traditional account withdrawals. Consider the timing of large withdrawals or potential relocation to tax-friendly states.`);
+            } else {
+                insights.push(`• Tax Advantage: Your state has no income tax, which provides additional flexibility in withdrawal timing and amounts.`);
+            }
+
+            const highIncomeYears = optimized.yearPlan.filter(year => year.irmaa > 0);
+            if (highIncomeYears.length > 0) {
+                insights.push(`• Medicare IRMAA Warning: ${highIncomeYears.length} years show potential IRMAA surcharges. Consider spreading large withdrawals across multiple years to avoid Medicare premium increases.`);
+            } else {
+                insights.push(`• Medicare IRMAA: Your optimized strategy successfully avoids Medicare IRMAA surcharges by keeping annual taxable income below $103,000.`);
+            }
+
+            if (profile.currentAge < 60 && profile.cashSavings > 0) {
+                const bridgeYears = Math.min(5, Math.floor(profile.cashSavings / profile.annualExpenses));
+                insights.push(`• Cash Bridge Strategy: Your cash savings can support approximately ${bridgeYears} years of expenses, providing flexibility to avoid early withdrawal penalties and optimize tax-advantaged account withdrawals.`);
+            }
+
+            const totalAssets = profile.traditional401k + profile.rothIRA + profile.taxableBrokerage + profile.cashSavings;
+            const taxDeferredPct = Math.round((profile.traditional401k / totalAssets) * 100);
+            const taxFreePct = Math.round((profile.rothIRA / totalAssets) * 100);
+            
+            insights.push(`• Asset Mix: Your portfolio is ${taxDeferredPct}% tax-deferred and ${taxFreePct}% tax-free. This provides good flexibility for tax management during retirement.`);
+
+            const lastYear = optimized.yearPlan[optimized.yearPlan.length - 1];
+            const finalBalance = lastYear.balances.traditional + lastYear.balances.roth + lastYear.balances.taxable + lastYear.balances.cash;
+            if (finalBalance > 0) {
+                insights.push(`• Portfolio Longevity: At age ${lastYear.age}, your projected remaining balance is ${formatCurrency(finalBalance)}, indicating your savings should last through retirement with these assumptions.`);
+            } else {
+                const depletionYear = optimized.yearPlan.find(year => 
+                    (year.balances.traditional + year.balances.roth + year.balances.taxable + year.balances.cash) < profile.annualExpenses
+                );
+                if (depletionYear) {
+                    insights.push(`• Portfolio Warning: Based on current assumptions, your portfolio may face challenges around age ${depletionYear.age}. Consider adjusting withdrawal amounts, increasing Social Security, or revising growth expectations.`);
+                }
+            }
+
+            return insights;
+        }
+    </script>
+</body>
+</html>
